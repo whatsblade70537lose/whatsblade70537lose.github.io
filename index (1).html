@@ -1,0 +1,162 @@
+<!--
+LAMU Login Page - single-file HTML/CSS/JS
+Place `logo.png` and `background.jpg` in the same folder as this file.
+This file reproduces the layout, fonts, text sizes, margins and the login check.
+SECURITY: This example performs client-side credential checking only for demonstration.
+For a real student portal use server-side authentication (e.g. HTTPS + backend with hashed passwords).
+
+Username required by user: 2025121533
+Password required by user: Patricia100406
+
+Open this file in a browser to view.
+--><!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LAMU Student Portal</title>
+  <style>
+    /* Use Times New Roman to match screenshots */
+    :root{
+      --purple:#3b1a4f; /* deep purple used in header */
+      --accent:#2b2b87;  /* button purple */
+      --box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    html,body{height:100%;margin:0;font-family:"Times New Roman",Times,serif;background:#fff;}/* top header with small logo */
+.header{
+  display:flex;align-items:center;padding:18px 26px;background:var(--purple);color:#fff;
+}
+.header .logo{height:64px;width:auto;margin-right:18px}
+.header .title{font-size:20px;font-weight:700;line-height:1;color:#fff}
+
+/* hero area with background image */
+.hero{
+  height:420px; /* similar visual height to screenshot */
+  background-image:url('images (3).jpeg');
+  background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;padding:24px;
+}
+
+/* the two white cards */
+.panel-wrap{display:flex;gap:34px;max-width:1200px;width:100%;}
+.card{background:#fff;border-radius:4px;box-shadow:var(--box-shadow);padding:30px;flex:1;min-width:320px}
+
+.card h2{margin:0 0 12px 0;font-size:20px}
+.card p{margin:0 0 18px 0;color:#444;line-height:1.35}
+
+.btn{display:inline-block;padding:14px 18px;border-radius:2px;text-decoration:none;font-weight:700;letter-spacing:0.4px}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.secondary{background:#2b6af0;color:#fff}
+
+/* login form styles to match screenshot text sizes & margins */
+.login-form label{display:block;font-weight:700;margin-bottom:6px}
+.login-form input[type=text],.login-form input[type=password]{width:100%;padding:10px;border:1px solid #dedede;border-radius:2px;margin-bottom:12px;font-size:16px}
+.login-form .login-btn{width:100%;padding:12px;background:#fff;border:1px solid #bbb;text-align:center;font-weight:700;cursor:pointer}
+
+/* responsive for narrow screens like phone screenshot */
+@media (max-width:880px){
+  .panel-wrap{flex-direction:column}
+  .hero{height:520px}
+}
+
+/* small result slip like first image (recreated lower on page) */
+.result-slip{max-width:900px;margin:28px auto;padding:18px;font-size:16px;border:1px solid #eee}
+.result-slip .rs-header{background:#9fc0df;color:#fff;padding:10px;font-weight:700;margin-bottom:10px}
+.results-table{width:100%;border-collapse:collapse}
+.results-table th,.results-table td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+.results-table th{background:#f7f7f7;font-weight:700}
+
+  </style>
+</head>
+<body>  <header class="header">
+    <img src="IMG-20251027-WA0029.jpg" alt="LAMU logo" class="logo">
+    <div class="title">LUSAKA APEX MEDICAL UNIVERSITY</div>
+  </header>  <main>
+    <section class="hero">
+      <div class="panel-wrap">
+        <div class="card">
+          <h2>ONLINE APPLICATION</h2>
+          <p>Through the easy to use student portal you can complete your online application with APEX. If you have been a student with APEX before then reset your password and login.</p>
+          <div style="margin-top:8px;font-weight:700;margin-bottom:12px">New students should:</div>
+          <a class="btn primary" href="#">APPLY FOR ACADEMIC PROGRAMS</a>
+          <div style="height:8px"></div>
+          <a class="btn secondary" href="#">APPLY FOR PROFESSIONAL PROGRAMS</a>
+        </div><div class="card" style="max-width:420px;">
+      <h2>STUDENT AND STAFF LOGIN</h2>
+      <p>Please use your <u>student number</u> or username and password to log in to the system.</p>
+      <form class="login-form" id="loginForm" onsubmit="return handleLogin(event)">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" placeholder="Enter student number">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Password">
+        <input type="submit" class="login-btn" value="Login">
+        <div id="msg" style="margin-top:12px;color:#a00;font-weight:700"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- small result-slip mock (like first screenshot) -->
+<section id="resultSection" class="result-slip" aria-label="result slip example" style="display:none;">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+    <img src="IMG-20251027-WA0029.jpg" alt="LAMU logo" style="height:56px">
+    <div style="font-size:18px;font-weight:700">LUSAKA APEX MEDICAL UNIVERSITY — RESULT SLIP</div>
+  </div>
+  <div class="rs-header">RESULT SLIP</div>
+  <div style="margin-bottom:10px;font-weight:700">Grades</div>
+  <div style="margin-bottom:18px">These are the grades currently available in the system for <span id="displayStudent">[student]</span></div>
+  <h3>Details</h3>
+  <p><b>Student Name:</b> Vannessa Patricia Mwanza </p>
+  <p><b>Student ID:</b>   2025121533</p>
+  <p><b>Programme:</b></bProgramme:> Bachelor of Science in Ultrasonography </p>
+  <p><b>Intake</b>: July 2025</p>
+  <p><b>Year</b>: Year 1,Semester 1</p>
+  
+
+  <table class="results-table" id="resultsTable">
+    <thead>
+      <tr><th>Semester</th><th>Course Code</th><th>Course Name</th><th>Grade</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2025-12</td><td>BS1002</td><td>Introductory Biology I</td><td>B+</td></tr>
+      <tr><td>2025-12</td><td>CH1002</td><td>Introductory Chemistry I</td><td>A</td></tr>
+      <tr><td>2025-12</td><td>M1002</td><td>Introduction to Mathematics I</td><td>B</td></tr>
+      <tr><td>2025-12</td><td>P1002</td><td>Introductory Physics II</td><td>C</td></tr>
+    </tbody>
+  </table>
+  CLEAR PASS
+</section>
+
+  </main>  <script>
+    // Provided credentials (client-side check only)
+    const VALID_USERNAME = '2025121533';
+    const VALID_PASSWORD = 'Patricia100406';
+
+    function handleLogin(evt){
+      evt.preventDefault();
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      const msg = document.getElementById('msg');
+      if(u === VALID_USERNAME && p === VALID_PASSWORD){
+        // hide the hero/login area and show the result slip
+        const hero = document.querySelector('.hero');
+        const result = document.getElementById('resultSection');
+        if(hero) hero.style.display = 'none';
+        if(result){
+          // populate student number in the slip
+          const display = document.getElementById('displayStudent');
+          if(display) display.textContent = u;
+          result.style.display = 'block';
+          result.scrollIntoView({behavior:'smooth'});
+        }
+        // clear message
+        msg.textContent = '';
+        return false;
+      } else {
+        msg.style.color = '#a00';
+        msg.textContent = 'Invalid username or password.';
+        return false;
+      }
+    }
+  </script></body>
+</html>
